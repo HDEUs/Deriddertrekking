@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>NGLife Draw</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 400px; margin: auto; }
+    input, button { padding: 10px; margin: 5px 0; width: 100%; }
+    .winner { font-size: 1.2em; font-weight: bold; color: green; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>Loting – wie wint?</h2>
+  <textarea id="names" rows="4" placeholder="Typ namen, één per regel"></textarea>
+  <input id="count" type="number" min="1" max="10" value="2" />
+  <button onclick="draw()">Start Loting</button>
+  <div class="winner" id="result"></div>
+  <button id="shareBtn" style="display:none" onclick="share()">Deel via WhatsApp</button>
+  <script>
+    function draw() {
+      const names = document.getElementById('names').value.split('\n').map(n => n.trim()).filter(n => n);
+      const count = Math.min(parseInt(document.getElementById('count').value), names.length);
+      if (count < 1 || names.length < count) {
+        alert("Vul minimaal " + count + " namen in.");
+        return;
+      }
+      const shuffled = names.sort(() => 0.5 - Math.random());
+      const winners = shuffled.slice(0, count);
+      const resultText = "Winnaars: " + winners.join(', ');
+      document.getElementById('result').innerText = resultText;
+      document.getElementById('shareBtn').style.display = 'block';
+      window.lastResult = resultText;
+    }
+    function share() {
+      const url = "https://wa.me/?text=" + encodeURIComponent(window.lastResult + " (via NGLife Draw)");
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>
